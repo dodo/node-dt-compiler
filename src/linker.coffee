@@ -88,7 +88,6 @@ hook = (tpl) ->
             el = elems[0]
 
             if typeof el is 'string' or typeof el is 'number'
-                console.log "text".blue, el
                 elems.shift() # rm text
                 parent.text? el, append:on
                 do repeat

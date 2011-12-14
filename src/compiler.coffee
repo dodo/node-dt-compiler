@@ -50,10 +50,6 @@ class HTMLCompiler
         el ?= @el
         # return only the important information
         do el.compile
-#         tree = jsonify el
-#         r = suitup rawtemplate, tree
-#         r.tree = tree
-#         r
 
 # exports
 
