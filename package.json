@@ -4,7 +4,7 @@
 , "homepage": "https://github.com/dodo/node-dt-compiler"
 , "author": "dodo (https://github.com/dodo)"
 , "repository": {"type": "git", "url": "git://github.com/dodo/node-dt-compiler.git"}
-, "main": "compiler.js"
+, "main": "dt-compiler.js"
 , "engines": {"node": ">= 0.4.x"}
 , "keywords": ["dt", "compiler", "async", "dynamic", "event", "template", "generation", "stream", "browser"]
 , "scripts": {
