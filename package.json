@@ -5,6 +5,7 @@
 , "author": "dodo (https://github.com/dodo)"
 , "repository": {"type": "git", "url": "git://github.com/dodo/node-dt-compiler.git"}
 , "main": "dt-compiler.js"
+, "browserify": "dt-linker.js"
 , "engines": {"node": ">= 0.4.x"}
 , "keywords": ["dt", "compiler", "async", "dynamic", "event", "template", "generation", "stream", "browser"]
 , "scripts": {
