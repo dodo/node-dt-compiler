@@ -73,7 +73,7 @@ class HTMLCompiler
         # values
         pending = no
         elem = data:[]
-        elem.data = @compile() if @loaded
+        elem.data = @compile(opts.select?.call this) if @loaded
         # when file is ready to be updated again
         done = ->
             # allow to use build like load
