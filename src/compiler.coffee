@@ -96,7 +96,7 @@ class HTMLCompiler
                 if ext is '.json'
                     source = JSON.stringify(elem.data)
                 else if ext is '.js'
-                    source = """var link = require('dynamictemplate/linker'),
+                    source = """var link = require('dt-compiler/linker'),
                     tree = #{JSON.stringify elem.data};
                     module.exports = function (rawtemplate) {
                         return link(rawtemplate, tree);
