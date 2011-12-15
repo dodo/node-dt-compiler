@@ -42,11 +42,12 @@ class HTMLCompiler
         @parse data
 
     load: (@filename, callback) ->
-        @loading = yes
+        @loading = []
         @read @filename, (err, data) ->
-            @loading = no
             return callback?.call(this, err) if err
+            [loading, @loading] = [@loading, no]
             @use data
+            delayed.call this, err for delayed in loading
             callback?(null, @el)
 
     open: (@filename) ->
@@ -106,6 +107,8 @@ class HTMLCompiler
 
         # do an auto load if not loaded so an extra load call is not needed
         @load opts.src, reload  if opts.src? and not (@loading or @loaded)
+        @loading.push reload if @loading
+
         if opts.watch
             # this is the filesystem listen routine
             watcher = (curr, prev) ->
