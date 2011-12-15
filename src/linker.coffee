@@ -95,7 +95,7 @@ module.exports = link = (rawtemplate, tree) ->
     return (args...) ->
         tpl = rawtemplate args...
         # local copy of the data structure
-        elems = copy_structure tree
+        elems = copy_structure tree.data ? tree
         # nest the data tree in the root
         tpl.xml._elems = elems
         # we need to get between the events from the builder and
