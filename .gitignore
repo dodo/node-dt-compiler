@@ -1,5 +1,6 @@
 *~
 *.swp
+examples/body.js
 build/*
 .lock-wscript
 node_modules/
