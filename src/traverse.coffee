@@ -1,6 +1,18 @@
+#
+# /** PrivateConstants: DOM Element Type Constants
+#  *  DOM element types.
+#  *
+#  *  ElementType.NORMAL - Normal element.
+#  *  ElementType.TEXT - Text data element.
+#  *  ElementType.FRAGMENT - XHTML fragment element.
+#  */
+DOMElementType =
+    NORMAL:   1
+    TEXT:     3
+    CDATA:    4
+    FRAGMENT: 11
 
-#{ trim, extend:merge } = jQuery
-
+#{ trim, extend:merge } = require 'jquery'
 ##
 # slice off spaces
 trim = (str) ->
