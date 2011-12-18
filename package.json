@@ -13,6 +13,7 @@
     "install": "node-waf configure build",
     "update": "node-waf build"}
 , "dependencies": {
+    "mkdir": ">= 0.2.1",
     "jquery": ">= 1.6.3",
     "browserify": "1.6.1",
     "scopify": ">= 0.1.1",

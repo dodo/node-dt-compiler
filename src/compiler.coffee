@@ -1,6 +1,7 @@
 fs = require 'fs'
+mkdirp = require 'mkdirp'
 jQuery = require 'jquery'
-{ extname } = require 'path'
+{ extname, dirname } = require 'path'
 { jsonify } = require './traverse'
 link = require './linker'
 
@@ -52,7 +53,9 @@ class HTMLCompiler
         unless @extensions[ext]?
             return done new Error "file extension of #{dest} not supported."
         source = @extensions[ext](data)
-        fs.writeFile(dest, source, done)
+        mkdirp dirname(dest), 0755, (err) ->
+            return done err if err
+            fs.writeFile(dest, source, done)
 
     parse: (data) ->
         @el = @$(data)
