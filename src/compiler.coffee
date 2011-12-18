@@ -44,6 +44,16 @@ class HTMLCompiler
     readSync: (filename) ->
         fs.readFileSync(filename)?.toString()
 
+    write: (dest, data, done) ->
+        unless dest?
+            return done null
+        # save json dom in an own file
+        ext = extname(dest).toLowerCase().substr(1) # without dot
+        unless @extensions[ext]?
+            return done new Error "file extension of #{dest} not supported."
+        source = @extensions[ext](data)
+        fs.writeFile(dest, source, done)
+
     parse: (data) ->
         @el = @$(data)
 
@@ -96,11 +106,14 @@ class HTMLCompiler
         elem = data:[]
         elem.data = @compile(opts.select?.call this) if @loaded
         # when file is ready to be updated again
-        done = ->
+        done = (err) ->
             # allow to use build like load
-            opts.done?()
-            # only invoke callback once (not on every fs cahnge again)
-            delete opts.done
+            if opts.done?
+                opts.done(err)
+                # only invoke callback once (not on every fs cahnge again)
+                delete opts.done
+            else
+                opts.error(err) if err?
             pending = no
         # compile dom to json and update opts.dest file
         reload = (err) =>
@@ -109,15 +122,7 @@ class HTMLCompiler
             # the next time a linked template is invoked it will use
             # automagicly the new data because elem doesn't change.
             elem.data = @compile opts.select?.call this
-            unless opts.dest?
-                done()
-            else
-                # save json dom in an own file
-                ext = extname(opts.dest).toLowerCase().substr(1) # without dot
-                unless @extensions[ext]?
-                    throw new Error "file extension of #{opts.dest} not supported."
-                source = @extensions[ext](elem.data)
-                fs.writeFile(opts.dest, source, done)
+            @write(opts.dest, elem.data, done)
 
         # do an auto load if not loaded so an extra load call is not needed
         @load opts.src, reload  if opts.src? and not (@loading or @loaded)
