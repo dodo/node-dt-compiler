@@ -4,6 +4,21 @@ jQuery = require 'jquery'
 { jsonify } = require './traverse'
 link = require './linker'
 
+extensions =  # defaults
+    json: (tree) ->
+        JSON.stringify(tree)
+    coffee: (tree) ->
+        """link = require 'dt-compiler/linker'
+        tree = #{JSON.stringify tree}
+        module.exports = (rawtemplate) -> link rawtemplate, tree
+        """
+    js: (tree) ->
+        """var link = require('dt-compiler/linker'),
+        tree = #{JSON.stringify tree};
+        module.exports = function (rawtemplate) {
+            return link(rawtemplate, tree);
+        };"""
+
 
 class HTMLCompiler
     constructor: ->
@@ -13,8 +28,14 @@ class HTMLCompiler
         # values
         @loaded = no
         @loading = no
+        @extensions = {}
+        for name, ext of HTMLCompiler.extensions
+            @extensions[name] = ext
         #aliases
         @loadSync = @open
+
+    register: (name, ext) ->
+        @extensions[name] = ext
 
     read: (filename, callback) ->
         fs.readFile filename, (err, data) =>
@@ -92,17 +113,10 @@ class HTMLCompiler
                 done()
             else
                 # save json dom in an own file
-                ext = extname(opts.dest).toLowerCase()
-                if ext is '.json'
-                    source = JSON.stringify(elem.data)
-                else if ext is '.js'
-                    source = """var link = require('dt-compiler/linker'),
-                    tree = #{JSON.stringify elem.data};
-                    module.exports = function (rawtemplate) {
-                        return link(rawtemplate, tree);
-                    };"""
-                else
-                    throw new Error "file extendsion of #{opts.dest} not supported."
+                ext = extname(opts.dest).toLowerCase().substr(1) # without dot
+                unless @extensions[ext]?
+                    throw new Error "file extension of #{opts.dest} not supported."
+                source = @extensions[ext](elem.data)
                 fs.writeFile(opts.dest, source, done)
 
         # do an auto load if not loaded so an extra load call is not needed
@@ -133,5 +147,6 @@ class HTMLCompiler
 
 # exports
 
+HTMLCompiler.extensions = extensions
 module.exports = HTMLCompiler
 
