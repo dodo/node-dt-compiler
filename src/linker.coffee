@@ -34,7 +34,9 @@ match = (tag, el) ->
     return yes unless el? # nothing to test against
     return no if tag.name isnt el.name
     for key, value of tag.attrs
-        return no if el.attrs[key] isnt value
+        if el.attrs[key] isnt value
+            return no if typeof value isnt 'string' or
+                        (el.attrs[key]?.indexOf(value) or -1) is -1
     return yes
 
 ##
