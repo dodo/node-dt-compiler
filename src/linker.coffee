@@ -67,9 +67,9 @@ mask = (tag, el) ->
 # this hooks on new instanziated templates and tries to
 # complete the structure with the given html design
 hook = (tpl) ->
-    tpl.xml.use (parent, tag, next) ->
+    # register checker for creating tags
+    tpl.register 'new', (parent, tag, next) ->
         elems = parent._elems
-
         # when this is a tag created from data structure
         return next(tag) unless elems?
 
@@ -78,7 +78,7 @@ hook = (tpl) ->
 
             if typeof el is 'string' or typeof el is 'number'
                 elems.shift() # rm text
-                parent.text? el, append:on
+                parent.text?(el, append:on)
                 do repeat
 
             else if match tag, el
@@ -88,7 +88,29 @@ hook = (tpl) ->
 
             else # create new tag
                 # create and insert the new tag from el and delay work
-                new_tag parent, el, repeat
+                new_tag(parent, el, repeat)
+        do repeat
+    # register checker for closing tags
+    tpl.register 'end', (tag, next) ->
+        elems = tag._elems
+        # when this is a tag created from data structure
+        return next(tag) unless elems?
+
+        repeat = ->
+            el = elems[0]
+
+            if typeof el is 'string' or typeof el is 'number'
+                elems.shift() # rm text
+                tag.text?(el, append:on)
+                do repeat
+
+            else unless el?
+                # list is empty
+                next(tag)
+
+            else # create new tag
+                # create and insert the new tag from el and delay work
+                new_tag(tag, el, repeat)
         do repeat
 
 ##
