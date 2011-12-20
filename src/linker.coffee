@@ -97,13 +97,12 @@ hook = (tpl) ->
                 tag.text?(el, append:on)
                 do repeat
 
-            else unless el?
-                # list is empty
-                next(tag)
-
-            else # create new tag
+            else if el?# create new tag
                 # create and insert the new tag from el and delay work
                 new_tag(tag, el, repeat)
+
+            else # list is empty
+                next(tag)
         do repeat
 
 ##
