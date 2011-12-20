@@ -36,7 +36,7 @@ match = (tag, el) ->
     for key, value of tag.attrs
         if el.attrs[key] isnt value
             return no if typeof value isnt 'string' or
-                        (el.attrs[key]?.indexOf(value) or -1) is -1
+                        (el.attrs[key]?.indexOf(value) ? -1) is -1
     return yes
 
 ##
