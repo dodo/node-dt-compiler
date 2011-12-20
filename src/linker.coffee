@@ -44,16 +44,9 @@ match = (tag, el) ->
 new_tag = (parent, el, callback) ->
     attrs = deep_merge el.attrs # copy data
     parent.tag el.name, attrs, ->
-        for child in el.children.slice() ? []
-            if typeof child is 'string' or typeof child is 'number'
-                @text "#{child}", append:on
-            else
-                new_tag this, child, ->
-                    callback?()
-                    callback = null
+        @once 'end', ->
+            callback?()
         @end()
-        # call back some delayed work
-        callback?()
 
 ##
 # apply possible additions from the data structure on the tag
