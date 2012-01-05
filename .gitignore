@@ -1,6 +1,7 @@
 *~
-*.swp
+*swp
 examples/body.js
-build/*
+lib/*
+*.browser.*
 .lock-wscript
 node_modules/

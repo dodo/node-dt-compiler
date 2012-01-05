@@ -1,2 +1,2 @@
 
-module.exports = require('./build/default/dt-linker')
+module.exports = require('./lib/dt-linker')

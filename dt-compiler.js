@@ -1,2 +1,2 @@
 
-module.exports = require('./build/default/dt-compiler')
+module.exports = require('./lib/dt-compiler')

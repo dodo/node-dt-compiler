@@ -1,2 +1,2 @@
 
-module.exports = require('./build/default/compiler')
+module.exports = require('./lib/compiler')
