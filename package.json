@@ -9,7 +9,7 @@
 , "engines": {"node": ">= 0.4.x"}
 , "keywords": ["dt", "compiler", "async", "dynamic", "event", "template", "generation", "stream", "browser"]
 , "scripts": {
-    "pre-publish": "cake build"}
+    "prepublish": "cake build"}
 , "dependencies": {
     "mkdirp": ">= 0.2.1",
     "jquery": ">= 1.6.3"}
