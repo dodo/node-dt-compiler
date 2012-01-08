@@ -53,7 +53,7 @@ class HTMLCompiler
         unless @extensions[ext]?
             return done new Error "file extension of #{dest} not supported."
         source = @extensions[ext](data)
-        mkdirp dirname(dest), 0755, (err) ->
+        mkdirp dirname(dest), (err) ->
             return done err if err
             fs.writeFile(dest, source, done)
 

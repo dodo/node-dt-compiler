@@ -11,7 +11,7 @@
 , "scripts": {
     "prepublish": "cake build"}
 , "dependencies": {
-    "mkdirp": ">= 0.2.1",
+    "mkdirp": ">= 0.2.2",
     "jquery": ">= 1.6.3"}
 , "devDependencies": {
     "browserify": ">= 1.6.1",
