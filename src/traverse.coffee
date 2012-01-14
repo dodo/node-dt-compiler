@@ -12,11 +12,6 @@ DOMElementType =
     CDATA:    4
     FRAGMENT: 11
 
-#{ trim, extend:merge } = require 'jquery'
-##
-# slice off spaces
-trim = (str) ->
-    str.replace /^\s+|\s+$/g, ""
 
 ##
 # dom attributes to object
@@ -42,7 +37,7 @@ traverse = (elems) ->
         if el.nodeType is DOMElementType.NORMAL
             res.push slim el
         else if el.nodeType is DOMElementType.TEXT
-            if trim(el.value).length
+            if el.value.trim().length
                 res.push el.value
         else continue
     return res
@@ -55,5 +50,5 @@ jsonify = (elems) ->
 
 # exports
 
-module.exports = { trim, slim_attrs, slim, traverse, jsonify }
+module.exports = { slim_attrs, slim, traverse, jsonify }
 
