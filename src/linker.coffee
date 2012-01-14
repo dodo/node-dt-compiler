@@ -77,6 +77,7 @@ hook = (tpl) ->
             else if match tag, el
                 elems.shift() # rm el
                 mask tag, el # apply
+                delete parent._elems if elems.length is 0
                 next(tag)
 
             else # create new tag
@@ -102,6 +103,7 @@ hook = (tpl) ->
                 new_tag(tag, el, repeat)
 
             else # list is empty
+                delete tag._elems
                 next(tag)
         do repeat
 
