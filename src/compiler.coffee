@@ -1,7 +1,7 @@
 fs = require 'fs'
 mkdirp = require 'mkdirp'
 jQuery = require 'jquery'
-{ extname, dirname, join:pathjoin } = require 'path'
+{ extname, dirname, basename, join:pathjoin } = require 'path'
 { jsonify } = require './traverse'
 link = require './linker'
 
@@ -52,7 +52,7 @@ class HTMLCompiler
         ext = extname(dest).toLowerCase().substr(1) # without dot
         unless @extensions[ext]?
             return done new Error "file extension of #{dest} not supported."
-        source = @extensions[ext](data)
+        source = @extensions[ext](data, basename(dest, extname(dest)))
         fullpath = pathjoin(path, dest)
         mkdirp dirname(fullpath), (err) ->
             return done err if err
