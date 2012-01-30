@@ -1,7 +1,7 @@
 fs = require 'fs'
 mkdirp = require 'mkdirp'
 jQuery = require 'jquery'
-{ extname, dirname } = require 'path'
+{ extname, dirname, join:pathjoin } = require 'path'
 { jsonify } = require './traverse'
 link = require './linker'
 
@@ -45,7 +45,7 @@ class HTMLCompiler
     readSync: (filename) ->
         fs.readFileSync(filename)?.toString()
 
-    write: (dest, data, done) ->
+    write: (path, dest, data, done) ->
         unless dest?
             return done null
         # save json dom in an own file
@@ -53,9 +53,10 @@ class HTMLCompiler
         unless @extensions[ext]?
             return done new Error "file extension of #{dest} not supported."
         source = @extensions[ext](data)
-        mkdirp dirname(dest), (err) ->
+        fullpath = pathjoin(path, dest)
+        mkdirp dirname(fullpath), (err) ->
             return done err if err
-            fs.writeFile(dest, source, done)
+            fs.writeFile(fullpath, source, done)
 
     parse: (data) ->
         @el = @$(data)
@@ -101,6 +102,7 @@ class HTMLCompiler
         opts.watch  ?= no
         opts.src    ?= @filename
         opts.dest   ?= null # it's ok when undefined
+        opts.path   ?= process.cwd()
         opts.select ?= selector
         opts.error  ?= (e) -> console.error e?.stack or e
         opts.done   ?= null
@@ -125,7 +127,7 @@ class HTMLCompiler
             # the next time a linked template is invoked it will use
             # automagicly the new data because elem doesn't change.
             elem.data = @compile opts.select?.call this
-            @write(opts.dest, elem.data, done)
+            @write(opts.path, opts.dest, elem.data, done)
 
         # do an auto load if not loaded so an extra load call is not needed
         @load opts.src, reload  if opts.src? and not (@loading or @loaded)
