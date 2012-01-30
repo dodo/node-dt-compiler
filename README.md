@@ -1,6 +1,6 @@
 # [Δt dynamictemplate Compiler](http://dodo.github.com/node-dt-compiler/)
 
-This is a static HTML file to Δt template compiler. It aims to seperate the minimal required amount of functionality from the actual design (given for example as mockup HTML file).
+This is a static HTML file to [Δt](http://dodo.github.com/node-dynamictemplate/) template compiler. It aims to seperate the minimal required amount of functionality from the actual design (given for example as mockup HTML file).
 
 
 ## Installation
