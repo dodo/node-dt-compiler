@@ -30,13 +30,13 @@ design.build({
 
 Keep your projects design automagically up-to-date while your web designer iterates over the mockup HTML files.
 
-generate masks out of mockup HTML files which can later applied on Templates to get the same result as in the mockup.
+This module generates masks out of mockup HTML files which can later applied on Templates to get the same result as in the mockup.
 
-Seperate functionality from design
+Don't write your template completely from scratch, just use the mockup file of your designer and write only thous tags, that you want to enchant with functionality.
 
-Creates all tags that you left out of template
+Template tags behave like selectors, if a new tag doesn't match with the mask, the mask tag, thats not fitting, gets created. (see `link` for more).
 
-Template tags behave like selectors, if a new tag doesn't match with the mask, the mask tag, thats not fitting, gets created.
+The goal if the module is to provide an automated seperation of functionality and design.
 
 ## api
 
@@ -113,6 +113,8 @@ This method expects [CSS selectors](http://sizzlejs.com/) as arguments.
 * The `from` argument selects all matching HTML nodes which you want to include into your mask.
 * The `to` argument selects all matching HTML nodes selected by the `from` selector and excludes them from the mask.
 
+It returns a jQuery Object.
+
 __info__ Do as many jQuery transformations (like removing lorum ipsum or removing unnecessary tags) in the selector (`opts.select` of `Compiler::build`) as possible to avoid them in the template.
 
 The given example selects only the ul tag and the div.controls with children but removes all li tags.
@@ -144,7 +146,7 @@ Which results in:
 #### compiler.register(name, extension)
 
 ```javascript
-compiler.register('.js', function (tree, name) { // overwrite existing .js extension handler
+compiler.register('.js', function (tree, name) { // overwrite existing '.js' extension handler
         var data = JSON.stringify(tree);
         return "window.masks = window.masks || {};\n" +
                "window.masks['"+name+"']=function(rawtemplate) {" +
@@ -189,7 +191,7 @@ The masks have a special behavior when they get applied. If a new Tag gets creat
 
 
 ```html
-<!-- assuming this is the dome model of the mask -->
+<!-- assuming this is the dom representation of the mask -->
 <div>
     <a href="/home">home</a>
     <span>dummy content</span>
@@ -206,3 +208,4 @@ return new Template({schema:5}, function () {
 });
 ````
 
+The result of that template would be that the output looks the same like the mask, but the span tag has a different content.
