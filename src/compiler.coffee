@@ -54,7 +54,10 @@ class HTMLCompiler
         unless @extensions[ext]?
             return done new Error "file extension of #{dest} not supported."
         source = @extensions[ext](data, basename(dest, rawext))
-        fullpath = pathjoin(path, dest)
+        if path? # is root dir given?
+            fullpath = pathjoin(path, dest)
+        else
+            fullpath = dest # hope that's a full path
         mkdirp dirname(fullpath), (err) ->
             return done err if err
             fs.writeFile(fullpath, source, done)
@@ -103,7 +106,7 @@ class HTMLCompiler
         opts.watch  ?= no
         opts.src    ?= @filename
         opts.dest   ?= null # it's ok when undefined
-        opts.path   ?= process.cwd()
+        opts.path   ?= null # it's ok when undefined
         opts.select ?= selector
         opts.error  ?= (e) -> console.error e?.stack or e
         opts.done   ?= null
