@@ -49,10 +49,11 @@ class HTMLCompiler
         unless dest?
             return done null
         # save json dom in an own file
-        ext = extname(dest).toLowerCase().substr(1) # without dot
+        rawext = extname(dest)
+        ext = rawext.toLowerCase().substr(1) # without dot
         unless @extensions[ext]?
             return done new Error "file extension of #{dest} not supported."
-        source = @extensions[ext](data, basename(dest, extname(dest)))
+        source = @extensions[ext](data, basename(dest, rawext))
         fullpath = pathjoin(path, dest)
         mkdirp dirname(fullpath), (err) ->
             return done err if err
