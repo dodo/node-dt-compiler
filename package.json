@@ -15,7 +15,7 @@
     "jquery": ">= 1.6.3"}
 , "devDependencies": {
     "browserify": ">= 1.6.1",
-    "scopify": ">= 0.1.1",
+    "scopify": ">= 0.2.1",
     "coffee-script": ">= 1.2.0",
     "muffin": ">= 0.2.6",
     "nodeunit": ">= 0.5.4"}
