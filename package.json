@@ -1,6 +1,6 @@
 { "name": "dt-compiler"
 , "description": "Δt compiler - async & dynamic templating engine compiler"
-, "version": "0.1.3"
+, "version": "0.1.4"
 , "homepage": "https://github.com/dodo/node-dt-compiler"
 , "author": "dodo (https://github.com/dodo)"
 , "repository": {"type": "git", "url": "git://github.com/dodo/node-dt-compiler.git"}
