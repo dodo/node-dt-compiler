@@ -138,26 +138,37 @@ class HTMLCompiler
         @loading.push reload if @loading
 
         if opts.watch
-            # this is the filesystem listen routine
-            watcher = (curr, prev) ->
-                return if pending
-                pending = yes
-                if curr.mtime isnt prev.mtime
-                    # modified, wait a little before reloading
-                    # since modifications tend to come in waves
-                    setTimeout ( ->
-                        try
-                            do reload
-                        catch err
-                            opts.error(err)
-                    ), 11
-            # no listen on fielsystem for changes
-            if typeof opts.watch is 'object'
-                fs.watchFile(opts.src, opts.watch, watcher)
-            else
-                fs.watchFile(opts.src, watcher)
+            @watch(opts, reload)
         # done
         return elem
+
+    watch: (opts, callback) ->
+        # only watch one html file per compiler and only once
+        return @watchers.push(callback) if @watching
+
+        # initialize
+        @watching = yes
+        @watchers = [callback]
+
+        # this is the filesystem listen routine
+        watcher = (curr, prev) ->
+            return if pending
+            pending = yes
+            if curr.mtime isnt prev.mtime
+                # modified, wait a little before reloading
+                # since modifications tend to come in waves
+                setTimeout ( ->
+                    try
+                        do reload for reload in @watchers
+                    catch err
+                        opts.error(err)
+                ), 11
+        # no listen on fielsystem for changes
+        if typeof opts.watch is 'object'
+            fs.watchFile(@filename, opts.watch, watcher)
+        else
+            fs.watchFile(@filename, watcher)
+
 
 # exports
 
