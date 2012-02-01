@@ -151,13 +151,13 @@ class HTMLCompiler
         @watchers = [callback]
 
         # this is the filesystem listen routine
-        watcher = (curr, prev) ->
+        watcher = (curr, prev) =>
             return if pending
             pending = yes
             if curr.mtime isnt prev.mtime
                 # modified, wait a little before reloading
                 # since modifications tend to come in waves
-                setTimeout ( ->
+                setTimeout ( =>
                     try
                         do reload for reload in @watchers
                     catch err
