@@ -1,6 +1,11 @@
 { isArray } = Array
 
 ##
+# check if a string contains a substring
+is_sub = (string, sub) ->
+    (string?.indexOf?(sub) ? -1) isnt -1
+
+##
 # copy many objects into one
 deep_merge = (objs...) ->
     objs = objs[0] if isArray(objs[0])
@@ -34,9 +39,17 @@ match = (tag, el) ->
     return yes unless el? # nothing to test against
     return no if tag.name isnt el.name
     for key, value of tag.attrs
-        if el.attrs[key] isnt value
-            return no if typeof value isnt 'string' or
-                        (el.attrs[key]?.indexOf(value) ? -1) is -1
+        elvalue = el.attrs[key]
+        # handle some attributes in a special way
+        switch key.toLowerCase()
+            when 'class'
+                # ignore order
+                for cls in value.split(' ')
+                    return no unless is_sub(elvalue, cls)
+            else
+                if value isnt elvalue
+                    unless typeof value is 'string' and is_sub(elvalue, value)
+                        return no
     return yes
 
 ##
