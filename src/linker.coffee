@@ -46,6 +46,9 @@ match = (tag, el) ->
                 # ignore order
                 for cls in value.split(' ')
                     return no unless is_sub(elvalue, cls)
+            when 'style'
+                # do nothing, because we can ignore it
+                # this means, that style tags can never missmatch
             else
                 if value isnt elvalue
                     unless typeof value is 'string' and is_sub(elvalue, value)
