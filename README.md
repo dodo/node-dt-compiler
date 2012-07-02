@@ -32,11 +32,54 @@ Keep your projects design automagically up-to-date while your web designer itera
 
 This module generates masks out of mockup HTML files which can later applied on Templates to get the same result as in the mockup.
 
-Don't write your template completely from scratch, just use the mockup file of your designer and write only thous tags, that you want to enchant with functionality.
+Don't write your template completely from scratch, just use the mockup file of your designer and write only those tags, that you want to enchant with functionality.
 
-Template tags behave like selectors, if a new tag doesn't match with the mask, the mask tag, thats not fitting, gets created. (see `link` for more).
+Template tags behave like selectors, if a new tag doesn't match with the mask, the not fitting mask tag gets created. (see `link` for more).
 
-The goal if the module is to provide an automated seperation of functionality and design.
+The goal of this module is to provide an automated seperation of functionality and design.
+
+__Note__
+
+This module changes the behavior of [asyncxml](http://dodo.github.com/node-asyncxml). All tag creation statements behave like selectors on the mask.
+So when you write a tag statement, it no longer just simply creates a new tag, it tries to match the new tag with what is given in the mask on the same level in the same parent tag. If you for example try to create a new tag that doesn't match with the mask, it creates all mask parts first, before creating your new tag. that means if you make a mistake or the designer change the name of a class, that you try to match, you will get not a broken template but the html would contain double content.
+
+example:
+
+```html
+<div class="parent">
+    <div class="logo"></div>
+    <div class="controls"></div>
+    <div class="first entry"></div>
+    <div class="second entry"></div>
+</div>
+```
+
+```javascript
+new Template({schema:5}, function () {
+    this.$div({class:'parent'}, function () {
+        // we dont the logo, so skip it
+        this.$div({class:'controls'}, function () { … });
+        this.$div({class:'fist entry'}, function () { … }); // here is a typo!
+        this.$div({class:'second entry'}, function () { … }); // thats just fine
+    });
+});
+```
+
+result:
+
+```html
+<div class="parent"><!-- matched -->
+    <div class="logo"></div><!-- from mask -->
+    <div class="controls"></div><!-- matched -->
+    <div class="first entry"></div><!-- from mask -->
+    <div class="second entry"></div><!-- from mask -->
+    <div class="fist entry"></div><!-- created -->
+    <div class="second entry"></div><!-- created -->
+</div>
+```
+
+If you or your designer doesn't like to write pure HTML mockup files, use another template engine, which is better for generating static HTML than [dynamic template](http://dodo.github.com/node-dynamictemplate).
+Like [HAML](http://haml-lang.org) or whatever floats your boat.
 
 ## api
 
