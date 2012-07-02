@@ -5,6 +5,9 @@ jQuery = require 'jquery'
 { jsonify } = require './traverse'
 link = require './linker'
 
+# https://github.com/brandonbloom/html2coffeekup
+# TODO get compiler in browser running so its possible to apply a template onto existing dom elements
+
 extensions =  # defaults
     json: (tree) ->
         JSON.stringify(tree)
