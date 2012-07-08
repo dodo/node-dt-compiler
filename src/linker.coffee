@@ -102,6 +102,7 @@ hook = (tpl) ->
         do repeat
     # register checker for closing tags
     tpl.register 'end', (tag, next) ->
+        delete tag._elems if tag.closed is 'removed'
         elems = tag._elems
         # when this is a tag created from data structure
         return next(tag) unless elems?
