@@ -1,4 +1,5 @@
 fs = require 'fs'
+render = require 'render'
 mkdirp = require 'mkdirp'
 jQuery = require 'jquery'
 { extname, dirname, basename, join:pathjoin } = require 'path'
@@ -10,15 +11,15 @@ link = require './linker'
 
 extensions =  # defaults
     json: (tree) ->
-        JSON.stringify(tree)
+        render.ctbn(tree)
     coffee: (tree) ->
         """link = require 'dt-compiler/linker'
-        tree = #{JSON.stringify tree}
+        tree = #{render.ctbn tree}
         module.exports = (rawtemplate) -> link rawtemplate, tree
         """
     js: (tree) ->
         """var link = require('dt-compiler/linker'),
-        tree = #{JSON.stringify tree};
+        tree = #{render.ctbn tree};
         module.exports = function (rawtemplate) {
             return link(rawtemplate, tree);
         };"""
