@@ -70,6 +70,7 @@ class HTMLCompiler
         @el = @$(data)
 
     select: (from, to) ->
+        {from, to} = from if typeof from is 'object'
         # selector
         el = @el.find(from)
         # dont touch origin
