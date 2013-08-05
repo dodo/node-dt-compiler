@@ -37,8 +37,8 @@ traverse = (elems) ->
         if el.nodeType is DOMElementType.NORMAL
             res.push slim el
         else if el.nodeType is DOMElementType.TEXT
-            if el.value.trim().length
-                res.push el.value
+            if el.nodeValue.trim().length
+                res.push el.nodeValue
         else continue
     return res
 
