@@ -7,7 +7,7 @@ console.log "extracting body part from index.html ..."
 design.build
     src:  "index.html"
     dest: "body.js"
-    select: -> @select 'body', '*'
+    select: -> @select 'body'
     done:   ->
         console.log "done."
         process.exit 0
