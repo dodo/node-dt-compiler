@@ -15,8 +15,7 @@
     "mkdirp": ">= 0.2.2",
     "jquery": ">= 1.6.3"}
 , "devDependencies": {
-    "browserify": ">= 1.6.1",
-    "scopify": ">= 0.2.1",
+    "browserify": ">= 2.26.0",
     "coffee-script": ">= 1.2.0",
     "muffin": ">= 0.2.6",
     "nodeunit": ">= 0.5.4"}

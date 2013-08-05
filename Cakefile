@@ -1,5 +1,5 @@
 path = require 'path'
-{ run, compileScript, minifyScript, writeFile, notify } = require 'muffin'
+{ run, compileScript, minifyScript, notify, exec } = require 'muffin'
 
 task 'compile', 'compile coffeescript → javascript', (options) ->
     run
@@ -14,7 +14,6 @@ task 'compile', 'compile coffeescript → javascript', (options) ->
 
 task 'bundle', 'build a browser bundle', (options) ->
     browserify = require 'browserify'
-    { createScope } = require 'scopify'
     run
         options:options
         files:[
@@ -22,13 +21,11 @@ task 'bundle', 'build a browser bundle', (options) ->
         ]
         map:
             'lib/(dt-linker).js': (m) ->
-                bundle = browserify({
-                        require: path.join(__dirname, m[0])
-                        cache: on
-                    }).use(createScope require:'./'+m[1]).bundle()
-                notify m[0], "successful browserify!"
+                entry = path.join(__dirname, m[0])
                 filename = "#{m[1]}.browser.js"
-                writeFile(filename, bundle, options).then ->
+                [child, promise] = exec "./node_modules/.bin/browserify #{entry} -o #{filename}"
+                promise.then ->
+                    notify m[0], "successful browserify!"
                     minifyScript filename, options
 
 task 'build', 'compile && bundle', (options) ->
