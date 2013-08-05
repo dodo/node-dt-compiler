@@ -42,13 +42,7 @@ traverse = (elems) ->
         else continue
     return res
 
-##
-# build an object (json-able) from dom
-jsonify = (elems) ->
-    slim el for el in elems ? []
-
-
 # exports
 
-module.exports = { slim_attrs, slim, traverse, jsonify }
+module.exports = { slim_attrs, slim, traverse, jsonify:traverse }
 
