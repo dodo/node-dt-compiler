@@ -13,7 +13,6 @@ task 'compile', 'compile coffeescript → javascript', (options) ->
                 compileScript m[0], path.join("lib" ,"#{m[1]}.js"), options
 
 task 'bundle', 'build a browser bundle', (options) ->
-    browserify = require 'browserify'
     run
         options:options
         files:[
