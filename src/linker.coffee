@@ -59,10 +59,9 @@ match = (tag, el) ->
 # create a new tag (and children) from data structure
 new_tag = (parent, el, callback) ->
     attrs = deep_merge el.attrs # copy data
-    parent.tag el.name, attrs, ->
-        @once 'end', ->
-            callback?()
-        @end()
+    tag = parent.tag(el.name, attrs).end()
+    callback()
+    return tag
 
 ##
 # apply possible additions from the data structure on the tag
@@ -115,7 +114,7 @@ hook = (tpl) ->
                 tag.text?(el, append:on)
                 do repeat
 
-            else if el?# create new tag
+            else if el? # create new tag
                 # create and insert the new tag from el and delay work
                 new_tag(tag, el, repeat)
 
