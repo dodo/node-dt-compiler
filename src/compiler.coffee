@@ -1,10 +1,10 @@
 fs = require 'fs'
 render = require 'render'
 mkdirp = require 'mkdirp'
-jQuery = require 'jquery'
 { extname, dirname, basename, join:pathjoin } = require 'path'
 { jsonify } = require './traverse'
 link = require './linker'
+$ = undefined
 
 # https://github.com/brandonbloom/html2coffeekup
 # TODO get compiler in browser running so its possible to apply a template onto existing dom elements
