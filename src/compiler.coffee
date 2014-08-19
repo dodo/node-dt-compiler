@@ -9,6 +9,15 @@ link = require './linker'
 # https://github.com/brandonbloom/html2coffeekup
 # TODO get compiler in browser running so its possible to apply a template onto existing dom elements
 
+maybeDefer = (method, methargs..., callback) ->
+    res = method?.apply(this, methargs)
+    if typeof res is 'function'
+        res.call this, methargs..., (args...) =>
+            callback.apply(this, args)
+    else
+        callback.call(this, res)
+
+
 extensions =  # defaults
     json: (tree) ->
         render.ctbn(tree)
@@ -26,10 +35,9 @@ extensions =  # defaults
 
 
 class HTMLCompiler
-    constructor: ->
-        # new jquery context
-        @$ = jQuery.create()
-        @$.fn.compile = -> jsonify this
+    constructor: (@mode = 'default') ->
+        @mode = 'jquery' # FIXME dt-parser isnt fully functional yet
+        do @initialize # depending on mode
         # values
         @loaded = no
         @loading = no
@@ -39,15 +47,37 @@ class HTMLCompiler
         #aliases
         @loadSync = @open
 
+    initialize: () ->
+        if @mode is 'jquery'
+            # new jquery context
+            jq = require('jquery').create()
+            jq.fn.compile = -> jsonify this
+            @parse = jq.bind(jq)
+            @select = @jquerySelect
+        else # is 'native'
+            $ = require('dt-selector')
+            @parse  = require('dt-parser')
+            @select = @dtSelect
+            @read   = @readStream # HACK, isnt it?
+
+
     register: (name, ext) ->
         @extensions[name] = ext
 
     read: (filename, callback) ->
         fs.readFile filename, (err, data) =>
             callback?.call(this, err, data?.toString())
+        return null
 
-    readSync: (filename) ->
-        fs.readFileSync(filename)?.toString()
+    readStream: (filename, callback) ->
+        stream = fs.createReadStream(filename)
+        callback?.call(this, null, stream)
+        return stream
+
+    readSync: (filename, callback) ->
+        data = fs.readFileSync(filename)?.toString()
+        callback?.call(this, null, data)
+        return data
 
     write: (path, dest, data, done) ->
         unless dest?
@@ -66,10 +96,18 @@ class HTMLCompiler
             return done err if err
             fs.writeFile(fullpath, source, done)
 
-    parse: (data) ->
-        @el = @$(data)
+    dtSelect: (from, to) ->
+        {from, to} = from if typeof from is 'object'
+        return (el, callback) =>
+            els = []
+            $(el).on from, (fromel) ->
+                els.push(fromel)
+                $(fromel).on to, (toel) ->
+                    toel.remove()
+            el.on 'end', ->
+                callback(els)
 
-    select: (from, to) ->
+    jquerySelect: (from, to) -> # jquery mode only
         {from, to} = from if typeof from is 'object'
         # selector
         el = @el.find(from)
@@ -118,7 +156,7 @@ class HTMLCompiler
         # values
         pending = no
         elem = data:[]
-        elem.data = @compile(opts.select?.call this) if @loaded
+        elem.data = maybeDefer.call(this, opts.select, @el, @compile) if @loaded
         # when file is ready to be updated again
         done = (err) ->
             # allow to use build like load
@@ -135,7 +173,7 @@ class HTMLCompiler
             # this updates all template linked to this design.
             # the next time a linked template is invoked it will use
             # automagicly the new data because elem doesn't change.
-            elem.data = @compile opts.select?.call this
+            elem.data = maybeDefer.call(this, opts.select, @el, @compile)
             @write(opts.path, opts.dest, elem.data, done)
 
         # do an auto load if not loaded so an extra load call is not needed
