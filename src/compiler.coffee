@@ -150,7 +150,7 @@ class HTMLCompiler
         opts.src    ?= @filename
         opts.dest   ?= null # it's ok when undefined
         opts.path   ?= null # it's ok when undefined
-        opts.select ?= selector
+        opts.select  = selector if selector?
         opts.error  ?= (e) -> console.error e?.stack or e
         opts.done   ?= null
         # values
