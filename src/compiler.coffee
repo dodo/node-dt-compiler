@@ -121,7 +121,7 @@ class HTMLCompiler
     use: (data) ->
         throw new Error "html file already loaded." if @loaded
         @loaded = yes
-        @parse data
+        @el = @parse data
 
     load: (@filename, callback) ->
         @loading = []
