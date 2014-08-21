@@ -13,7 +13,7 @@
 , "dependencies": {
     "render": ">= 0.1.2",
     "mkdirp": ">= 0.2.2",
-    "jquery": ">= 1.6.3"}
+    "jquery": "~1.8.3"}
 , "peerDependencies": {
     "dt-parser": ">= 0.0.1",
     "dt-selector": ">= 0.0.4",
