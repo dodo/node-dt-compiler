@@ -15,9 +15,9 @@
     "mkdirp": ">= 0.2.2",
     "jquery": ">= 1.6.3"}
 , "peerDependencies": {
-    "dt-parser": ">= 0.0.0",
+    "dt-parser": ">= 0.0.1",
     "dt-selector": ">= 0.0.4",
-    "dynamictemplate": ">= 0.5.8"}
+    "dynamictemplate": ">= 0.7.0"}
 , "devDependencies": {
     "browserify": ">= 2.26.0",
     "coffee-script": ">= 1.2.0",
